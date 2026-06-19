@@ -1,0 +1,13 @@
+# Data files (too large for GitHub)
+data/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.env
+
+# Airflow
+logs/
+airflow.db
+airflow.cfg

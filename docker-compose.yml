@@ -1,0 +1,17 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15
+    container_name: ipl_postgres
+    environment:
+      POSTGRES_USER: ipl_user
+      POSTGRES_PASSWORD: ipl_pass
+      POSTGRES_DB: ipl_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:
