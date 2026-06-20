@@ -2,6 +2,20 @@ import pandas as pd
 import psycopg2
 from psycopg2.extras import execute_values
 
+# ── Team name standardization ────────────────────────────────────
+TEAM_NAME_MAP = {
+    'Rising Pune Supergiants': 'Rising Pune Supergiant',
+    'Royal Challengers Bangalore': 'Royal Challengers Bengaluru',
+    'Delhi Daredevils': 'Delhi Capitals',
+    'Kings XI Punjab': 'Punjab Kings',
+    'Deccan Chargers': 'Sunrisers Hyderabad',
+}
+
+def clean_team_name(name):
+    if pd.isna(name):
+        return name
+    return TEAM_NAME_MAP.get(name, name)
+
 # ── Database connection ──────────────────────────────────────────
 def get_conn():
     return psycopg2.connect(
@@ -165,6 +179,13 @@ if __name__ == "__main__":
     print("📂 Reading CSV files...")
     matches = pd.read_csv("data/matches.csv")
     deliveries = pd.read_csv("data/deliveries.csv")
+
+    # Apply team name cleaning to all relevant columns
+    for col in ['team1', 'team2', 'toss_winner', 'winner']:
+        matches[col] = matches[col].apply(clean_team_name)
+
+    for col in ['batting_team', 'bowling_team']:
+        deliveries[col] = deliveries[col].apply(clean_team_name)
 
     print("🔌 Connecting to database...")
     conn = get_conn()
